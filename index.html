@@ -2,31 +2,69 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGI - Dimayor</title>
     <link rel="icon" href="favicon.ico">
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: #004c99; }
+
+        .wrap {
             width: 100%;
-            height: 100%;
+            height: 100vh;
             overflow: hidden;
+            position: relative;
         }
+
         iframe {
-            width: 100%;
-            height: 100%;
             border: none;
-            display: block;
+            position: absolute;
+            top: 0; left: 0;
         }
     </style>
+    <script>
+        function resizeIframe() {
+            var dpr = window.devicePixelRatio || 1;
+            var vw  = window.innerWidth;
+            var vh  = window.innerHeight;
+
+            // Si es móvil (DPR alto = pantalla densa)
+            var isMobile = dpr >= 2 && vw < 1200;
+
+            var iframe = document.getElementById("appFrame");
+            if (!iframe) return;
+
+            if (isMobile) {
+                // El iframe de Apps Script se renderiza a ~980px
+                // Lo escalamos para que quepa en la pantalla real
+                var appWidth  = 980;
+                var scale     = vw / appWidth;
+                var appHeight = vh / scale;
+
+                iframe.style.width  = appWidth + "px";
+                iframe.style.height = appHeight + "px";
+                iframe.style.transformOrigin = "0 0";
+                iframe.style.transform = "scale(" + scale + ")";
+            } else {
+                // PC: tamaño normal
+                iframe.style.width  = "100%";
+                iframe.style.height = "100%";
+                iframe.style.transform = "none";
+            }
+        }
+
+        window.addEventListener("load",   resizeIframe);
+        window.addEventListener("resize", resizeIframe);
+    </script>
 </head>
 <body>
-    <iframe
-        src="https://script.google.com/a/macros/dimayor.com.co/s/AKfycbzglezy4rzzCQ7hvOGiABvqtn47Upe7uLfV5W6Ebs2x5g6QOZ5NsT8A1td2isBKhM3Q/exec"
-        allowfullscreen
-        scrolling="yes"
-        title="SGI Dimayor"
-    ></iframe>
+    <div class="wrap">
+        <iframe
+            id="appFrame"
+            src="https://script.google.com/a/macros/dimayor.com.co/s/AKfycbwdXPVq4TUYAsTKSVzDWTqprlDPbt07S5aKq4Pwhlseh9rVCmVUogiBTxyDnMXQZX73/exec"
+            scrolling="yes"
+            title="SGI Dimayor"
+        ></iframe>
+    </div>
 </body>
 </html>
