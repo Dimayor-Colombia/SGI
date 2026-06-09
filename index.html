@@ -55,13 +55,31 @@
 
         window.addEventListener("load",   resizeIframe);
         window.addEventListener("resize", resizeIframe);
+
+        // SHARE — recibe mensaje del iframe y ejecuta Web Share API desde el contexto correcto
+        window.addEventListener("message", function(e) {
+            if (!e.data || e.data.type !== "share") return;
+            var url    = e.data.url;
+            var nombre = e.data.nombre;
+            if (navigator.share) {
+                navigator.share({
+                    title: nombre,
+                    text: "Te comparto este archivo de Dimayor: " + nombre,
+                    url: url
+                }).catch(function() {});
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() {
+                    alert("Enlace copiado al portapapeles ✓");
+                });
+            }
+        });
     </script>
 </head>
 <body>
     <div class="wrap">
         <iframe
             id="appFrame"
-            src="https://script.google.com/a/macros/dimayor.com.co/s/AKfycbwdXPVq4TUYAsTKSVzDWTqprlDPbt07S5aKq4Pwhlseh9rVCmVUogiBTxyDnMXQZX73/exec"
+            src="https://script.google.com/a/macros/dimayor.com.co/s/AKfycbzXgeI-yzoZy4ceu_kF1lj-KOOmGvlIKh6oWnfsNgPbkli-YOGrBLZ5niZuGrfpj-nQ/exec"
             scrolling="yes"
             title="SGI Dimayor"
         ></iframe>
