@@ -23,6 +23,21 @@
         }
     </style>
     <script>
+        var APP_URL = "https://script.google.com/a/macros/dimayor.com.co/s/AKfycbxjmViZOZJ57Bphd3dOqadV3VXEWNeCy6UZYatd75UVFW1ENF1k23b1_77emPcdseEX/exec";
+
+        function isIOS() {
+            // iPhone/iPod/iPad clásico + iPadOS (que se reporta como "MacIntel" con soporte táctil)
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+        }
+
+        if (isIOS()) {
+            // En iOS, Safari bloquea la cookie de sesión de Google dentro de un iframe
+            // de otro dominio (ITP), así que el login nunca llega a mostrarse.
+            // Por eso abrimos la app directo en la misma pestaña, sin iframe.
+            window.location.replace(APP_URL);
+        }
+
         // SHARE — recibe mensaje del iframe y ejecuta Web Share API desde el contexto correcto
         window.addEventListener("message", function(e) {
             // Solo aceptamos mensajes que vengan del propio Apps Script
